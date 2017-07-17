@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="guestbook">
+	
+	<insert id="write" parameterType="guestbookvo">
+		<![CDATA[
+			INSERT INTO guestbook (name, password, reg_date, content) 
+			VALUES(#{name }, #{password }, now(), #{content })
+		]]>
+	</insert>
+	
+	<select id="list" resultType="guestbookvo">
+		<![CDATA[
+			select * from guestbook	order by no desc	
+		]]>
+	</select>
+	
+	<!-- 게시판 페이지 알고리즘과 동일한 것으로 ajax는 스크롤을 내릴때마다 다음 페이지를 불러오게 하는 방법이라서!! -->
+	<!-- * 숫자 가 한 페이지에 뜨는 게스트북의 갯수를 정함 ex) (1-1)*2+1 <= rownum < 1*2 -->
+	<select id="loadguestbook" parameterType="int" resultType="guestbookvo">
+		<![CDATA[
+			select * 
+			from (select *, format(@rownum:=@rownum + 1, 0) as rownum 
+						from guestbook g, (select @rownum:=0) r order by no desc) a 
+			where (#{page } - 1) * 3 + 1 <= rownum and rownum <= #{page } * 3
+		]]>
+	</select>
+	
+	<!-- useGeneratedKeys : insert 후 자동으로 key를 생성하겠다. keyProperty : 생성할 key(컬럼이름) -->
+	<!-- 이렇게 생성한 키는 vo에 담겨줘서 vo.get~~()으로 읽어오기 가능 (다오에서 읽어와서 쓰고 있음)-->
+	<insert id="writeajax" parameterType="guestbookvo" useGeneratedKeys="true" keyProperty="no">
+		<![CDATA[
+			insert into guestbook (name, password, reg_date, content)
+			values(#{name }, #{password }, now(), #{content })
+		]]>
+	</insert>
+	
+	<select id="getbyno" parameterType="long" resultType="guestbookvo">
+		<![CDATA[
+			select * from guestbook where no = #{no }
+		]]>
+	</select>
+	
+	<delete id="deleteajax" parameterType="guestbookvo">
+		<![CDATA[
+			delete from guestbook where no = #{no } and password = #{password }
+		]]>
+	</delete>
+	
+</mapper>

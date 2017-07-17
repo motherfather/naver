@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- DispatcherServlet의 applicationContext는 View 지원 bean 설정(JSP) ex) Controller -->
+	<!-- annotation 설정을 하겠다!! -->
+	<context:annotation-config />
+
+	<!-- annotation을 scan하겠다 -->
+	<!-- com.study.naver.*를 com.study.naver.controller로 변경(여기는 controller bean 
+		설정이므로) -->
+	<!-- base-package에서 모든 어노테이션을 사용하는 클래스를 자동으로 빈설정 한다는 것 -->
+	<context:component-scan base-package="com.study.naver.controller" />
+
+	<!-- 이게 없으면 디폴트 서블릿이 안되는듯... -->
+	<!-- 참고사이트 >> http://zgundam.tistory.com/10 -->
+	<!-- 여기에는 많은값들이 자동으로 입력된다. -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<!-- 스트링 타입 지원, 요청 본문 내용 그대로 가져올 수 있음, 응답 콘텐츠 타입이 "text/html", 단순문자열 가능 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html; charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+
+			<!-- 자바 객체(vo)를 JSON로, JSON을 자바 객체로 자동변환 (쉽게 말해서 vo나 map을 리턴하면 그것이 알아서 
+				json형태로 변환됨) -->
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json; charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+
+		<!-- 세션에서 매번 로그인 정보를 가져오기 번거로우므로 @LoginInfo가 달렸으면 HandlerMethodArgumentResolver를 
+			통해 파라미터를 가져온다 -->
+		<mvc:argument-resolvers>
+			<bean
+				class="com.study.naver.security.LoginInfoHandlerMethodArgumentResolver" />
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+
+	<!-- 서블릿 컨테이너의 디폴트 서블릿 위임 핸들러 -->
+	<mvc:default-servlet-handler />
+
+	<!-- 기본 뷰 리졸버 -->
+	<!-- 경로 단축용 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="1" />
+	</bean>
+
+	<!-- MessageSource -->
+	<!-- 참고사이트 http://giyatto.tistory.com/71 -->
+	<!-- 에러메세지 출력을 위함 -->
+	<!-- 다국어 처리도 이걸 이용함 -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="defaultEncoding" value="utf-8" /><!-- 반장형이 찾은 
+			좋은 방식!!! 한글 인식!!! -->
+		<property name="basenames">
+			<list>
+				<value>messages/messages</value>
+			</list>
+		</property>
+	</bean>
+
+	<mvc:interceptors>
+		<!-- 로그인 인터셉터 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/member/login" />
+			<bean class="com.study.naver.security.LoginInterceptor" />
+		</mvc:interceptor>
+
+		<!-- 로그아웃인터셉터 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/member/logout" />
+			<bean class="com.study.naver.security.LogoutInterceptor" />
+		</mvc:interceptor>
+
+		<!-- 접근권한 인터셉터(비회원은 접근못하거나 admin만 접근가능하거나... -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/member/login" />
+			<mvc:exclude-mapping path="/member/logout" />
+			<bean class="com.study.naver.security.AccessRoleInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- 파일업로드용 -->
+	<!-- 멀티파트 리졸버 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 최대업로드 가능한 바이트크기 -->
+		<property name="maxUploadSize" value="52428800" />
+		<!-- 디스크에 임시 파일을 생성하기 전에 메모리에 보관할수있는 최대 바이트 크기 -->
+		<!-- property name="maxInMemorySize" value="52428800" / -->
+		<!-- defaultEncoding -->
+		<property name="defaultEncoding" value="utf-8" />
+	</bean>
+	
+	<!-- 하드디스크에 저장된 이미지를 jsp로 가져올때!! -->
+	<!-- location에는 하드디스크에 실제 이미지가 있는 경로를 쓰고 mapping에는 jsp에서 그 이미지를 가져올 때 사용할 경로를 쓴다 -->
+	<!-- 실제 이미지는 이클립스가 깔린 하드(c드라이브일 경우 c:/upload)의 저 경로 "c:/upload/이미지이름" 에 있지만 -->
+	<!-- jsp에서 그 이미지를 불러다 쓸때는 "localhost:8088/naver/gallery/image/이미지이름" 으로 불러다 쓴다 -->
+	<mvc:resources location="file:/upload/" mapping="/gallery/image/**" />
+	<!-- <mvc:resources location="file:c:/upload/" mapping="/gallery/image/**" /> -->
+</beans>

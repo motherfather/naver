@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gallery">
+	
+	<!-- 갤러리 리스트 -->
+	<select id="list" resultType="map">
+		<![CDATA[
+			select g.*, m.name 
+			from gallery g 
+			left outer join member m on g.mem_no = m.no
+			order by no desc;
+		]]>
+	</select>
+	
+	<!-- 파일 업로드 -->
+	<insert id="upload">
+		<![CDATA[
+			insert into gallery (title, content, image, image_size, reg_date, hit, mem_no) 
+			values(#{title }, #{content }, #{image }, #{image_size }, now(), 0, #{mem_no })
+		]]>
+	</insert>
+	
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+<!-- contextConfigLocation(root) applicationContext는 View 지원을 제외한 bean 설정 ex) Service / Repository(DAO) / DB / log 등등 -->
+	<!-- 이걸 설정해줘야 annotation을 scan 가능? -->
+	<context:annotation-config />
+	
+	<!-- annotation을 scan하겠다 -->
+	<!-- com.study.naver.*를 com.study.naver.repository, com.study.naver.service로 변경(여기는 service, dao, db 등의 bean 설정이므로 -->
+	<!-- base-package에서 repository, service, component 어노테이션을 사용하는 클래스를 자동으로 빈설정 한다는 것 -->
+	<context:component-scan base-package="com.study.naver.repository, com.study.naver.service">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Repository" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Component" />
+	</context:component-scan>
+
+	<!-- dataSource 설정, spring-jdbc 모듈 사용, spring 에서 jdbc 를 통해 mysql 에 접속할 수 
+		있게 함 -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/good" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+
+	<!-- 팩토리빈을 생성하기 위해서!! -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis/configuration.xml" />
+	</bean>
+
+	<!-- 마이바티스에서는 SqlSession를 생성하기 위해 SqlSessionFactory를 사용한다 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+</beans>
