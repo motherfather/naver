@@ -120,25 +120,6 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat8-maven-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<url>http://1.224.107.93:80/manager/text</url>
-					<path>/first</path>
-					<username>tomcat</username>
-					<password>tomcat-test</password>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 </project>
