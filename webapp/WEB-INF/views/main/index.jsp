@@ -5,7 +5,7 @@
 <!doctype html>
 <html>
 <head>
-<title>${request.getContextPath }</title>
+<title>${request }</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 </head>
 <body>
