@@ -7,6 +7,21 @@
 	<packaging>war</packaging>
 
 	<dependencies>
+
+		<!-- 이클립스에서 서버열때 말고 실제 서버 돌릴떄 꼭 써줘야 함 -->	
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>javax.servlet-api</artifactId>
+		    <version>3.1.0</version>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>javax.servlet.jsp</groupId>
+		    <artifactId>javax.servlet.jsp-api</artifactId>
+		    <version>2.3.1</version>
+		    <scope>provided</scope>
+		</dependency>
+	
 		<!-- spring의 기본 -->
 		<dependency>
 			<groupId>org.springframework</groupId>
