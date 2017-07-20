@@ -5,7 +5,7 @@
 <!doctype html>
 <html>
 <head>
-<title>Naver</title>
+<title>${request.getContextPath }</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 </head>
 <body>
