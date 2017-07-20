@@ -5,7 +5,7 @@
 <!doctype html>
 <html>
 <head>
-<title>${request }</title>
+<title>테스트</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 </head>
 <body>
