@@ -5,7 +5,7 @@
 <!doctype html>
 <html>
 <head>
-<title>테스트</title>
+<title>Naver</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 </head>
 <body>
