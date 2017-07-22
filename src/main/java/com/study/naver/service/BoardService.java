@@ -29,7 +29,7 @@ public class BoardService {
 		List<Map<String, Object>> list = boardDao.list(page, list_size);  
 		
 		int totalBoard = boardDao.totalBoard(); // 총 게시물의 수
-		int totalPage = (int)Math.ceil((double)totalBoard / list_size); // 총 페이지의 수
+		int totalPage = totalBoard != 0 ? (int)Math.ceil((double)totalBoard / list_size) : 1; // 총 페이지의 수 (총 게시물 수 0이라면 false의 1이 값으로 들어간다)
 		
 		// ◀1 2 3 4 5▶ ← 페이지블럭
 		// 마지막 페이지블럭 ◀1 2 3 4 5▶ 1, ◀6 7 8▶ 2
