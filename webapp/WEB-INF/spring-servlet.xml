@@ -121,6 +121,6 @@
 	<!-- <mvc:resources location="file:c:/upload/" mapping="/gallery/image/**" /> -->
 	
 	<!-- 리눅스용 업로드 경로는 로케이션이 다르다 -->
-	<mvc:resources location="file:/home/ubuntu/war/upload" mapping="/gallery/image/**" />
+	<mvc:resources location="file:/home/ubuntu/war/upload/" mapping="/gallery/image/**" />
 	
 </beans>

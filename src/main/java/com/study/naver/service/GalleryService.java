@@ -40,7 +40,7 @@ public class GalleryService {
 		try { // getBytes()는 ioexception을 발생시키나봄...
 			// 파일을 c드라이브의 upload폴더에 저장함
 			byte[] fileData = file.getBytes(); // 파일 데이터를 구하는 함수로 이를 통해 저장함
-			FileOutputStream fileOutputStream = new FileOutputStream("/upload/" + newFileName); // 저장할 위치와 저장할 파일이름 설정
+			FileOutputStream fileOutputStream = new FileOutputStream("/home/ubuntu/war/upload/" + newFileName); // 저장할 위치와 저장할 파일이름 설정
 			fileOutputStream.write(fileData); // 저장할 파일 데이터 설정하고 실제로 하드디스크에 저장!!
 			fileOutputStream.close(); // 파일아웃풋스트림 닫기
 		} catch (IOException ioException) {
