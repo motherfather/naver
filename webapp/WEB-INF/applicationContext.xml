@@ -27,8 +27,8 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/good" />
-		<property name="username" value="root" />
-		<property name="password" value="root" />
+		<property name="username" value="sangwook" /> <!-- 아마존 웹서비스 RDS mysql에서 사용하는 정보로 변경 -->
+		<property name="password" value="eoen1031" />
 	</bean>
 
 	<!-- 팩토리빈을 생성하기 위해서!! -->
